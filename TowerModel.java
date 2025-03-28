@@ -1,43 +1,44 @@
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
-
 public class TowerModel {
-    private final int totalDisks;
-    private final List<Stack<Integer>> rods;
+    private int height;
+    private IntegerStack[] towers;
 
-    public TowerModel(int totalDisks) {
-        this.totalDisks = totalDisks;
-        rods = new ArrayList<>();
-        
-        // Initialize rods
+    public TowerModel(int height) {
+        this.height = height;
+        towers = new IntegerStack[3];
         for (int i = 0; i < 3; i++) {
-            rods.add(new Stack<>());
+            towers[i] = new IntegerStack(height);
         }
-
-        for (int i = totalDisks; i > 0; i--) {
-            rods.get(0).push(i);
-            }
+        for (int i = height; i > 0; i--) {
+            towers[0].push(i);
         }
-
-        public void move(int fromRod, int toRod) {
-        if (rods.get(fromRod).isEmpty()) {
-            throw new IllegalStateException("Cannot move from an empty rod!");
-        }
-        if (!rods.get(toRod).isEmpty() && rods.get(fromRod).peek() > rods.get(toRod).peek()) {
-            throw new IllegalStateException("Cannot place a larger disk on a smaller one!");
-        }
-        rods.get(toRod).push(rods.get(fromRod).pop());
     }
 
-    public boolean isSolved() {
-        return rods.get(0).isEmpty() && rods.get(1).isEmpty() && rods.get(2).size() == totalDisks;
+    public int getHeight() {
+        return height;
     }
 
-    public void print() {
-        for (int i = 0; i < rods.size(); i++) {
-            System.out.println("Rod " + i + ": " + rods.get(i));
+    public IntegerStack[] getTowers() {
+        return towers;
+    }
+
+    public boolean move(int from, int to) {
+        if (from < 0 || from > 2 || to < 0 || to > 2) {
+            return false;
         }
-        System.out.println();
+
+        if (towers[from].peek() == 0) {
+            return false;
+        }
+
+        int topFrom = towers[from].peek();
+        int topTo = towers[to].peek();
+
+        if (topTo != 0 && topFrom > topTo) {
+            return false;
+        }
+
+        towers[to].push(towers[from].pop());
+        return true;
     }
 }
+

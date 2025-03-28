@@ -1,17 +1,15 @@
 public class TowerSolver {
-    private final TowerModel tower;
-
-    public TowerSolver(TowerModel tower) {
-        this.tower = tower;
+    public void solve(TowerModel model) {
+        moveDisks(model.getHeight(), 0, 2, 1, model);
     }
 
-    public void solve(int disks, int startRod, int endRod, int spareRod) {
-        if (disks == 0) return;
+    private void moveDisks(int n, int from, int to, int aux, TowerModel model) {
+        if (n == 0) {
+            return;
+        }
 
-        solve(disks - 1, startRod, spareRod, endRod);
-
-        tower.move(startRod, endRod);
-
-        solve(disks - 1, spareRod, endRod, startRod);
+        moveDisks(n - 1, from, aux, to, model);
+        model.move(from, to);
+        moveDisks(n - 1, aux, to, from, model);
     }
 }
